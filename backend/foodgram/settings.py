@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'recipes.apps.RecipesConfig',
     'users.apps.UsersConfig',
-    'shortener.apps.ShortenerConfig',
+    #'shortener.apps.ShortenerConfig',
 ]
 
 MIDDLEWARE = [
