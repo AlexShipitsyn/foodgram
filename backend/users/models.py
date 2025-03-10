@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser
-
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
 
 class User(AbstractUser):
     """Пользователь"""
@@ -18,14 +18,16 @@ class User(AbstractUser):
     avatar = models.ImageField(
         'Аватар',
         upload_to='user/',
-        blank=True,
-        null=True
+        blank=True, null=True
     )
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'username']
 
 
 class AuthorModel(models.Model):
     """Автор"""
-    
+
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -36,7 +38,7 @@ class AuthorModel(models.Model):
         abstract = True
 
 
-class SubscriberModel(models.Model):
+class Subscriber(AuthorModel):
     """Подписки"""
 
     user = models.ForeignKey(
