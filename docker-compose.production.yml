@@ -16,26 +16,28 @@ services:
     image: alexshipitsyn/foodgram_backend
     env_file: .env
     volumes:
-      - static:/app/static
+      - static:/backend_static
       - media:/app/media
     depends_on:
       - db
 
   frontend:
     image: alexshipitsyn/foodgram_frontend
+    env_file: .env
+    command: cp -r /app/build/. /static/
     volumes:
-      - ../frontend/:/app/result_build/
+      - static:/static
     depends_on:
       - backend
 
   gateway:
     image: alexshipitsyn/foodgram_nginx
-    ports:
-      - 8000:80
+    env_file: .env
     volumes:
-      - ../frontend/build:/usr/share/nginx/html/
       - static:/static
       - media:/media
+    ports:
+      - 8000:80
     depends_on:
-      - frontend
       - backend
+      - frontend
