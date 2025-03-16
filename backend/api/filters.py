@@ -1,14 +1,15 @@
 from django.contrib.auth import get_user_model
 from django_filters.rest_framework import (BooleanFilter, CharFilter,
                                            FilterSet,
-                                           ModelMultipleChoiceFilter)
+                                           AllValuesMultipleFilter)
+
 from recipes.models import Ingredient, Recipe, Tag
 
 User = get_user_model()
 
 
 class IngredientFilter(FilterSet):
-    """Ингредиенты"""
+    """Фильтр для поиска по Ингредиентам"""
 
     name = CharFilter(lookup_expr='istartswith')
 
@@ -18,12 +19,10 @@ class IngredientFilter(FilterSet):
 
 
 class RecipeFilter(FilterSet):
-    """Рецепты"""
+    """Фильтр для поиска по Рецептам."""
 
-    tags = ModelMultipleChoiceFilter(
+    tags = AllValuesMultipleFilter(
         field_name='tags__slug',
-        queryset=Tag.objects.all(),
-        to_field_name='slug',
     )
     is_favorited = BooleanFilter(
         method='is_favorite_filter',
@@ -31,7 +30,7 @@ class RecipeFilter(FilterSet):
     )
     is_in_shopping_cart = BooleanFilter(
         method='is_in_shopping_cart_filter',
-        field_name='shopping_cart__author',
+        field_name='shopping_carts__author',
     )
 
     class Meta:
@@ -44,6 +43,7 @@ class RecipeFilter(FilterSet):
         )
 
     def is_favorite_filter(self, queryset, name, value):
+        """Фильтр по избранным рецептам."""
         return self.filter_from_kwargs(
             queryset,
             value,
@@ -51,6 +51,7 @@ class RecipeFilter(FilterSet):
         )
 
     def is_in_shopping_cart_filter(self, queryset, name, value):
+        """Фильтр по рецептам в списке покупок."""
         return self.filter_from_kwargs(
             queryset,
             value,
@@ -58,6 +59,7 @@ class RecipeFilter(FilterSet):
         )
 
     def filter_from_kwargs(self, queryset, value, name):
+        """Фильтр по избранным рецептам и рецептам в списке покупок."""
         if value and self.request.user.id:
             return queryset.filter(**{name: self.request.user})
         return queryset

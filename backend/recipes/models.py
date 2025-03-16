@@ -1,28 +1,25 @@
-from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from users.models import User
 
-AMOUNT_MIN = 1
-AMOUNT_MAX = 32000
-INGREDIENT_CHAR_MAX = 128
-INGREDIENT_UNIT_MAX = 64
-RECIPE_CHAR_MAX = 256
-TAG_CHAR_MAX = 32
-MIN_TIME = 1
+from users.models import User
+from recipes.constants import (MIN_TIME, RECIPE_CHAR_MAX,
+                               TAG_CHAR_MAX, INGREDIENT_CHAR_MAX,
+                               INGREDIENT_UNIT_MAX, AMOUNT_MIN,
+                               AMOUNT_MAX
+)
 
 
 class AuthorModel(models.Model):
-    """Автор"""
+    """Абстрактная модель Автора."""
 
     author = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         on_delete=models.CASCADE,
         verbose_name='Автор',
     )
 
     class Meta:
-        ordering = ('-id', )
+        ordering = ('-author', )
         abstract = True
 
     def __str__(self):
@@ -30,7 +27,7 @@ class AuthorModel(models.Model):
 
 
 class Tag(models.Model):
-    """Теги"""
+    """Класс модели тегов."""
 
     name = models.CharField(
         'Название',
@@ -44,7 +41,7 @@ class Tag(models.Model):
     )
 
     class Meta:
-        ordering = ('-id', )
+        ordering = ('-name', )
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 
@@ -53,7 +50,7 @@ class Tag(models.Model):
 
 
 class Ingredient(models.Model):
-    """Ингредиенты"""
+    """Класс модели ингредиентов."""
 
     name = models.CharField(
         'Название',
@@ -81,7 +78,7 @@ class Ingredient(models.Model):
 
 
 class Recipe(AuthorModel):
-    """Рецепты"""
+    """Класс модели рецептов."""
 
     image = models.ImageField(
         'Картинка',
@@ -125,7 +122,7 @@ class Recipe(AuthorModel):
 
 
 class RecipeIngredient(models.Model):
-    """Ингредиенты - количество"""
+    """Количество ингредиента в рецепте."""
 
     ingredient = models.ForeignKey(
         Ingredient,
@@ -161,7 +158,7 @@ class RecipeIngredient(models.Model):
 
 
 class AuthorRecipeModel(AuthorModel):
-    """Абстрактная модель Автора и Рецепта"""
+    """Абстрактная модель Автора и Рецепта."""
 
     recipe = models.ForeignKey(
         'recipes.Recipe',
@@ -174,15 +171,12 @@ class AuthorRecipeModel(AuthorModel):
 
 
 class FavoriteRecipe(AuthorRecipeModel):
-    """Избранное"""
+    """Избранные рецепты."""
+
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='favorite_recipes'
-    )
-    recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE
     )
 
     class Meta:
@@ -201,20 +195,17 @@ class FavoriteRecipe(AuthorRecipeModel):
 
 
 class ShoppingCart(AuthorRecipeModel):
-    """Корзина"""
+    """Корзина рецептов."""
+
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='shopping_cart_recipes'
     )
-    recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE
-    )
 
     class Meta:
         ordering = ('-id', )
-        default_related_name = 'shopping_cart'
+        default_related_name = 'shopping_carts'
         verbose_name = 'Корзина'
         verbose_name_plural = verbose_name
         constraints = [
@@ -229,7 +220,8 @@ class ShoppingCart(AuthorRecipeModel):
 
 
 class Import(models.Model):
-    """Импорт CSV"""
+    """Импорт CSV."""
+
     csv_file = models.FileField(
         'Файл',
         upload_to='uploads/'

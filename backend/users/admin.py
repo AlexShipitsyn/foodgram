@@ -3,19 +3,21 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
 from rest_framework.authtoken.models import TokenProxy
 
-from .models import Subscriber, User
+from users.models import Subscriber, User
 
 
 @admin.register(User)
 class UsersAdmin(UserAdmin):
-    """Админка для пользователя"""
+    """Админка для пользователя."""
 
     list_display = (
         'id',
         'full_name',
         'username',
         'email',
-        'is_staff'
+        'is_staff',
+        'recipe_count',  
+        'subscriber_count'
     )
     search_fields = (
         'username',
@@ -25,8 +27,18 @@ class UsersAdmin(UserAdmin):
 
     @admin.display(description='Имя фамилия')
     def full_name(self, obj):
-        """Получение полного имени"""
+        """Получение полного имени."""
         return obj.get_full_name()
+    
+    @admin.display(description='Количество рецептов')
+    def recipe_count(self, obj):
+        """Возвращает количество рецептов пользователя."""
+        return obj.recipes.count()
+
+    @admin.display(description='Количество подписчиков')
+    def subscriber_count(self, obj):
+        """Возвращает количество подписчиков пользователя."""
+        return obj.subscribers.count()
 
 
 admin.site.register(Subscriber)

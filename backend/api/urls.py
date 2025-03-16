@@ -5,22 +5,22 @@ from . import views
 
 router = DefaultRouter()
 router.register(
-    r'users',
+    'users',
     views.UserViewSet,
     'users'
 )
 router.register(
-    r'tags',
+    'tags',
     views.TagViewSet,
     'tag'
 )
 router.register(
-    r'recipes',
+    'recipes',
     views.RecipeViewSet,
     'recipe'
 )
 router.register(
-    r'ingredients',
+    'ingredients',
     views.IngredientViewSet,
     'ingredient'
 )
@@ -29,5 +29,5 @@ app_name = 'api'
 urlpatterns = [
 
     path('', include(router.urls)),
-    path(r'auth/', include('djoser.urls.authtoken')),
+    path('auth/', include('djoser.urls.authtoken')),
 ]

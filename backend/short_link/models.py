@@ -1,25 +1,11 @@
-import string
-from random import choice, randint
-
 from django.db import models
 
-MIN = 8
-MAX = 10
-MAX_HASH = 15
-URL = 256
-
-
-def generate_hash() -> str:
-    """Генератор"""
-
-    return ''.join(
-        choice(string.ascii_letters + string.digits)
-        for _ in range(randint(MIN, MAX))
-    )
+from short_link.constants import MAX_HASH, URL
+from short_link.service import generate_hash
 
 
 class LinkMapped(models.Model):
-    """Ссылки"""
+    """Модель ссылок."""
 
     url_hash = models.CharField(
         'Короткая ссылка',

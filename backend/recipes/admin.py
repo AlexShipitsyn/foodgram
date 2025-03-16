@@ -5,11 +5,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import path, reverse
 
-from .forms import ImportForm
-from .models import (FavoriteRecipe, Import, Ingredient, Recipe,
+from recipes.constants import INGREDIENT_MIN_AMOUNT
+from recipes.forms import ImportForm
+from recipes.models import (FavoriteRecipe, Import, Ingredient, Recipe,
                      RecipeIngredient, ShoppingCart, Tag)
-
-INGREDIENT_MIN_AMOUNT = 1
 
 
 class RecipeIngredientInline(admin.TabularInline):
@@ -19,9 +18,9 @@ class RecipeIngredientInline(admin.TabularInline):
     extra = 1
     min_num = INGREDIENT_MIN_AMOUNT
 
-
+@admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    """Рецепт"""
+    """Рецепты."""
 
     list_display = (
         'name',
@@ -57,12 +56,12 @@ class RecipeAdmin(admin.ModelAdmin):
     )
 
     def favorite_recipe(self, obj):
-        """Избраное"""
+        """Избранное рецепты."""
         return FavoriteRecipe.objects.filter(recipe=obj).count()
 
-
+@admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    """Тег"""
+    """Теги."""
 
     list_display = (
         'id',
@@ -75,9 +74,9 @@ class TagAdmin(admin.ModelAdmin):
         'slug'
     )
 
-
+@admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
-    """Ингредиент"""
+    """Ингредиенты."""
 
     list_display = (
         'name',
@@ -88,6 +87,7 @@ class IngredientAdmin(admin.ModelAdmin):
     search_help_text = 'Поиск по названию ингредиента'
 
     def get_urls(self):
+        """Получение url."""
         urls = super().get_urls()
         urls.insert(
             -1,
@@ -99,6 +99,7 @@ class IngredientAdmin(admin.ModelAdmin):
         return urls
 
     def upload_csv(self, request):
+        """Импорт ингредиентов."""
         if request.method == 'POST':
             form = ImportForm(
                 request.POST,
@@ -132,7 +133,7 @@ class IngredientAdmin(admin.ModelAdmin):
 
 @admin.register(FavoriteRecipe, ShoppingCart)
 class AuthorRecipeAdmin(admin.ModelAdmin):
-    """Корзина"""
+    """Корзина рецептов и избранное."""
 
     list_display = (
         'id',
@@ -146,12 +147,9 @@ class AuthorRecipeAdmin(admin.ModelAdmin):
 
 @admin.register(Import)
 class BookImportAdmin(admin.ModelAdmin):
+    """Импорт книг."""
+
     list_display = (
         'csv_file',
         'date_added'
     )
-
-
-admin.site.register(Recipe, RecipeAdmin)
-admin.site.register(Ingredient, IngredientAdmin)
-admin.site.register(Tag, TagAdmin)

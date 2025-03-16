@@ -1,3 +1,15 @@
+from django.contrib.auth import get_user_model
+from django.db.models import Exists, OuterRef
+from django.http import FileResponse
+from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
+from djoser import views as djoser_views
+from rest_framework import permissions, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+
 from api.filters import IngredientFilter, RecipeFilter
 from api.paginations import FoodgramPagination
 from api.pdf_converter import ingredients_list, pdf_shopping_list
@@ -7,29 +19,20 @@ from api.serializers import (AvatarSerializer, FavoriteSerializer,
                              RecipeSerializer, ShoppingCartSerializer,
                              ShortLinkSerializer, SubscribeSerializer,
                              TagSerializer)
-from django.contrib.auth import get_user_model
-from django.db.models import Exists, OuterRef
-from django.http import FileResponse
-from django.shortcuts import get_object_or_404
-from django_filters.rest_framework import DjangoFilterBackend
-from djoser import views as djoser_views
-from recipes.models import (FavoriteRecipe, Ingredient, Recipe, ShoppingCart,
-                            Tag)
-from rest_framework import permissions, status, viewsets
-from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
+from recipes.models import (FavoriteRecipe, Ingredient,
+                            Recipe, ShoppingCart, Tag)
 from users.models import Subscriber
 
 User = get_user_model()
 
 
 class UserViewSet(djoser_views.UserViewSet):
+    """ViewSet для работы с Пользователями."""
 
     pagination_class = FoodgramPagination
 
     def get_queryset(self):
+        """Получение списка пользователей."""
         user = self.request.user
         if self.action in ('list', 'retrieve'):
             return (
@@ -74,6 +77,7 @@ class UserViewSet(djoser_views.UserViewSet):
         url_name='me',
     )
     def me(self, request, *args, **kwargs):
+        """Мой профиль."""
         return super().me(request, *args, **kwargs)
 
     @action(
@@ -84,12 +88,13 @@ class UserViewSet(djoser_views.UserViewSet):
         url_name='me-avatar',
     )
     def avatar(self, request):
-        """Аватар"""
+        """Аватар."""
         serializer = self._change_avatar(request.data)
         return Response(serializer.data)
 
     @avatar.mapping.delete
     def delete_avatar(self, request):
+        """Удаление аватара."""
         data = request.data
         if 'avatar' not in data:
             data = {'avatar': None}
@@ -104,7 +109,7 @@ class UserViewSet(djoser_views.UserViewSet):
         url_name='subscriptions',
     )
     def subscriptions(self, request):
-        """Список подписок"""
+        """Список подписок."""
         page = self.paginate_queryset(self.get_queryset())
         serializer = SubscribeSerializer(
             page, many=True,
@@ -120,7 +125,7 @@ class UserViewSet(djoser_views.UserViewSet):
         url_name='subscribe',
     )
     def subscribe(self, request, id):
-        """Подписка"""
+        """Подписка на автора."""
         serializer = SubscribeSerializer(
             data={'author': self.get_object()},
             context={'request': request},
@@ -134,6 +139,7 @@ class UserViewSet(djoser_views.UserViewSet):
 
     @subscribe.mapping.delete
     def unsubscribe(self, request, id):
+        """Отписка от автора."""
         subscriber_deleted, _ = request.user.subscriber.filter(
             author=self.get_object()
         ).delete()
@@ -143,6 +149,7 @@ class UserViewSet(djoser_views.UserViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def _change_avatar(self, data):
+        """Изменение аватара."""
         instance = self.get_instance()
         serializer = AvatarSerializer(
             instance,
@@ -154,13 +161,15 @@ class UserViewSet(djoser_views.UserViewSet):
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
+    """Отображение тэгов."""
+
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = [permissions.AllowAny]
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
-    """Ингредиент"""
+    """Отображение ингредиентов."""
 
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
@@ -170,7 +179,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    """Рецепт"""
+    """ViewSet для работы с Рецептами."""
 
     http_method_names = ['get', 'post', 'patch', 'delete']
     pagination_class = FoodgramPagination
@@ -179,6 +188,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filterset_class = RecipeFilter
 
     def get_serializer_class(self):
+        """Выбор сериализатора."""
         fun_action = {
             'list': RecipeSerializer,
             'retrieve': RecipeSerializer,
@@ -189,6 +199,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return fun_action.get(self.action, RecipeCreateSerializer)
 
     def get_queryset(self):
+        """Получение списка рецептов."""
         user = self.request.user
         robj = Recipe.objects
 
@@ -227,11 +238,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
         url_name='shopping-cart',
     )
     def shopping_cart(self, request, pk=None):
+        """Добавление в корзину."""
         request = get_object_or_404(Recipe, pk=pk)
         return self._post_author_recipe(request, pk)
 
     @shopping_cart.mapping.delete
     def delete_shopping_cart(self, request, pk=None):
+        """Удаление из корзины."""
         return self._delete_author_recipe(request, pk, ShoppingCart)
 
     @action(
@@ -239,11 +252,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
         detail=True,
     )
     def favorite(self, request, pk=None):
+        """Добавление в избранное."""
         request = get_object_or_404(Recipe, pk=pk)
         return self._post_author_recipe(request, pk)
 
     @favorite.mapping.delete
     def delete_favorite(self, request, pk=None):
+        """Удаление из избранного."""
         return self._delete_author_recipe(request, pk, FavoriteRecipe)
 
     @action(
@@ -253,7 +268,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         url_name='get-link',
     )
     def get_link(self, request, pk=None):
-        """ссылка для рецепта"""
+        """Ссылка для рецепта."""
         self.get_object()
         original_url = request.META.get('HTTP_REFERER')
         if original_url is None:
@@ -269,6 +284,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def _post_author_recipe(self, request, pk):
+        """Добавление рецепта."""
         serializer = self.get_serializer(data=dict(recipe=pk))
         serializer.is_valid(raise_exception=True)
         serializer.save(author=self.request.user)
@@ -278,6 +294,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         )
 
     def _delete_author_recipe(self, request, pk, model):
+        """Удаление рецепта."""
         recipe = get_object_or_404(Recipe, pk=pk)
         obj_count, _ = model.objects.filter(
             author=self.request.user,
@@ -294,9 +311,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
         url_name='download_shopping_cart',
     )
     def download_shopping_cart(self, request, file_ext='pdf'):
+        """Скачивание списка покупок."""
         user = request.user
         author_shopping_list = Recipe.objects.filter(
-            shopping_cart__author=user)
+            shopping_carts__author=user)
         shopping_list = ingredients_list(author_shopping_list)
 
         if file_ext != 'pdf':
@@ -314,7 +332,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             buffer,
             content_type=content_type
         )
-        filename = f'{user.username}_shopping_cart.{file_ext}'
+        filename = f'{user.username}_shopping_cartS.{file_ext}'
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
 
         return response

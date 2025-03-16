@@ -10,7 +10,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 
 TITLE = 'Shopping List'
 HEADER_TEXT = 'Список покупок'
-FOOTER_TEXT = 'FoodGram @ 2024'
+FOOTER_TEXT = 'FoodGram @ 2025'
 FONT_FAMILY = 'Arial'
 REGISTER_FONT_URL = 'data_font/SpecialElite.ttf'
 FONT_SIZE = 12

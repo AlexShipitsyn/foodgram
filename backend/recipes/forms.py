@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 from django.forms import ModelForm
 
-from .models import Import
+from recipes.models import Import
 
 
 class ImportForm(ModelForm):

@@ -1,45 +1,42 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.utils.translation import gettext_lazy as _
+
+from users.constants import LAST_NAME_MAX_LENGTH, FIRST_NAME_MAX_LENGTH
 
 
 class User(AbstractUser):
-    """Пользователь"""
+    """Модель пользователя."""
 
-    email = models.EmailField(unique=True)
+    email = models.EmailField(
+        unique=True,
+        verbose_name='Почта'
+    )
     first_name = models.CharField(
-        _("first name"),
-        max_length=150
+        max_length=FIRST_NAME_MAX_LENGTH,
+        verbose_name='Имя'
     )
     last_name = models.CharField(
-        _("last name"),
-        max_length=150
+        max_length=LAST_NAME_MAX_LENGTH,
+        verbose_name='Фамилия'
     )
     avatar = models.ImageField(
-        'Аватар',
         upload_to='user/',
-        blank=True, null=True
+        blank=True, null=True,
+        verbose_name='Аватар'
     )
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'username']
 
 
-class AuthorModel(models.Model):
-    """Автор"""
+class Subscriber(models.Model):
+    """Модель подписок пользователей."""
 
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         verbose_name='Автор',
     )
-
-    class Meta:
-        abstract = True
-
-
-class Subscriber(AuthorModel):
-    """Подписки"""
 
     user = models.ForeignKey(
         User,
@@ -67,6 +64,7 @@ class Subscriber(AuthorModel):
 
     @classmethod
     def get_prefetch_subscribers(cls, lookup, user):
+        """Получение подписок пользователя."""
         return models.Prefetch(
             lookup,
             queryset=cls.objects.all().annotate(
