@@ -16,7 +16,7 @@ class UsersAdmin(UserAdmin):
         'username',
         'email',
         'is_staff',
-        'recipe_count',  
+        'recipe_count',
         'subscriber_count'
     )
     search_fields = (
@@ -29,7 +29,7 @@ class UsersAdmin(UserAdmin):
     def full_name(self, obj):
         """Получение полного имени."""
         return obj.get_full_name()
-    
+
     @admin.display(description='Количество рецептов')
     def recipe_count(self, obj):
         """Возвращает количество рецептов пользователя."""

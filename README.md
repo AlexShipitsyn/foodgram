@@ -101,29 +101,29 @@ docker compose exec backend python manage.py migrate
    .github/workflows/main.yml
    ```
 
-1. Подключитесь к серверу через SSH:
+### 1. Подключитесь к серверу через SSH:
 ```bash
 ssh user@server_ip
 ```
 
-2. Создайте рабочую директорию и перейдите в неё:
+### 2. Создайте рабочую директорию и перейдите в неё:
 ```bash
 mkdir foodgram && cd foodgram
 ```
 
-3. Скопируйте файлы на сервер:
+### 3. Скопируйте файлы на сервер:
 ```bash
 # Для копирования через SCP (выполнять на локальной машине)
 scp .env user@server_ip:/home/user/foodgram/
 scp docker-compose.production.yml user@server_ip:/home/user/foodgram/
 ```
 
-4. Запустите контейнеры в фоновом режиме:
+### 4. Запустите контейнеры в фоновом режиме:
 ```bash
 sudo docker compose -f docker-compose.production.yml up -d --build
 ```
 
-5. Проверьте статус контейнеров:
+### 5. Проверьте статус контейнеров:
 ```bash
 sudo docker compose -f docker-compose.production.yml ps
 ```

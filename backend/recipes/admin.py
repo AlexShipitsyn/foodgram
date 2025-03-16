@@ -7,8 +7,9 @@ from django.urls import path, reverse
 
 from recipes.constants import INGREDIENT_MIN_AMOUNT
 from recipes.forms import ImportForm
-from recipes.models import (FavoriteRecipe, Import, Ingredient, Recipe,
-                     RecipeIngredient, ShoppingCart, Tag)
+from recipes.models import (FavoriteRecipe, Import,
+                            Ingredient, Recipe,
+                            RecipeIngredient, ShoppingCart, Tag)
 
 
 class RecipeIngredientInline(admin.TabularInline):
@@ -17,6 +18,7 @@ class RecipeIngredientInline(admin.TabularInline):
     model = RecipeIngredient
     extra = 1
     min_num = INGREDIENT_MIN_AMOUNT
+
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
@@ -59,6 +61,7 @@ class RecipeAdmin(admin.ModelAdmin):
         """Избранное рецепты."""
         return FavoriteRecipe.objects.filter(recipe=obj).count()
 
+
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     """Теги."""
@@ -73,6 +76,7 @@ class TagAdmin(admin.ModelAdmin):
         'name',
         'slug'
     )
+
 
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):

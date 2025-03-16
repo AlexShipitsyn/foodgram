@@ -3,7 +3,7 @@ from django_filters.rest_framework import (BooleanFilter, CharFilter,
                                            FilterSet,
                                            AllValuesMultipleFilter)
 
-from recipes.models import Ingredient, Recipe, Tag
+from recipes.models import Ingredient, Recipe
 
 User = get_user_model()
 

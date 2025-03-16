@@ -135,8 +135,14 @@ class RecipeSerializer(serializers.ModelSerializer):
     ingredients = IngredientGetSerializer(
         many=True, source='recipe_ingredients'
     )
-    is_favorited = serializers.BooleanField(default=False, read_only=True)
-    is_in_shopping_cart = serializers.BooleanField(default=False, read_only=True)
+    is_favorited = serializers.BooleanField(
+        default=False,
+        read_only=True
+    )
+    is_in_shopping_cart = serializers.BooleanField(
+        default=False,
+        read_only=True
+    )
 
     class Meta:
         model = Recipe
@@ -308,7 +314,6 @@ class UserRecipeSerializer(UserSerializer):
     class Meta(UserSerializer.Meta):
         fields = UserSerializer.Meta.fields + ('recipes',
                                                'recipes_count')
-        
 
     def get_recipes(self, obj):
         """Возвращает список рецептов пользователя."""
@@ -321,7 +326,9 @@ class UserRecipeSerializer(UserSerializer):
         else:
             recipes = recipes[:recipes_limit]
 
-        return ShortRecipeSerializer(recipes, many=True, context=self.context).data
+        return ShortRecipeSerializer(recipes,
+                                     many=True,
+                                     context=self.context).data
 
 
 class ShortLinkSerializer(serializers.ModelSerializer):

@@ -1,4 +1,4 @@
-#models constants
+# models constants
 AMOUNT_MIN = 1
 AMOUNT_MAX = 32000
 INGREDIENT_CHAR_MAX = 128
@@ -6,5 +6,5 @@ INGREDIENT_UNIT_MAX = 64
 RECIPE_CHAR_MAX = 256
 TAG_CHAR_MAX = 32
 MIN_TIME = 1
-#admin constants
+# admin constants
 INGREDIENT_MIN_AMOUNT = 1
