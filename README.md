@@ -2,7 +2,7 @@
 
 [![CI/CD](https://github.com/AlexShipitsyn/foodgram/actions/workflows/main.yml/badge.svg)](https://github.com/AlexShipitsyn/foodgram/actions)
 ![Python](https://img.shields.io/badge/Python-3.9-3670A0?logo=python)
-![Django](https://img.shields.io/badge/Django-4.2-092E20?logo=django)
+![Django](https://img.shields.io/badge/Django-3.2-092E20?logo=django)
 ![Postgres](https://img.shields.io/badge/Postgres-13-316192?logo=postgresql)
 
 Онлайн-платформа для создания рецептов, управления списком покупок и подписки на авторов.
