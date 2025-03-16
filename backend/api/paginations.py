@@ -1,6 +1,5 @@
-from rest_framework.pagination import PageNumberPagination
-
 from api.constants import PAGE_SIZE, PAGE_SIZE_QUERY_PARAM
+from rest_framework.pagination import PageNumberPagination
 
 
 class FoodgramPagination(PageNumberPagination):

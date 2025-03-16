@@ -1,11 +1,9 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-
+from recipes.constants import (AMOUNT_MAX, AMOUNT_MIN, INGREDIENT_CHAR_MAX,
+                               INGREDIENT_UNIT_MAX, MIN_TIME, RECIPE_CHAR_MAX,
+                               TAG_CHAR_MAX)
 from users.models import User
-from recipes.constants import (MIN_TIME, RECIPE_CHAR_MAX,
-                               TAG_CHAR_MAX, INGREDIENT_CHAR_MAX,
-                               INGREDIENT_UNIT_MAX, AMOUNT_MIN,
-                               AMOUNT_MAX)
 
 
 class AuthorModel(models.Model):

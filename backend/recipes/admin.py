@@ -4,11 +4,9 @@ from django.contrib import admin, messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import path, reverse
-
 from recipes.constants import INGREDIENT_MIN_AMOUNT
 from recipes.forms import ImportForm
-from recipes.models import (FavoriteRecipe, Import,
-                            Ingredient, Recipe,
+from recipes.models import (FavoriteRecipe, Import, Ingredient, Recipe,
                             RecipeIngredient, ShoppingCart, Tag)
 
 

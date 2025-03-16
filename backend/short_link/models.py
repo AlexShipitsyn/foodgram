@@ -1,5 +1,4 @@
 from django.db import models
-
 from short_link.constants import MAX_HASH, URL
 from short_link.service import generate_hash
 
