@@ -1,4 +1,3 @@
-```markdown
 # 🍴 Foodgram — Продуктовый помощник
 
 [![CI/CD](https://github.com/AlexShipitsyn/foodgram/actions/workflows/main.yml/badge.svg)](https://github.com/AlexShipitsyn/foodgram/actions)
@@ -147,11 +146,6 @@ sudo docker compose -f docker-compose.production.yml ps
    Молоко,л
    ```
 5. Подтвердите импорт
-
----
-
-
----
 
 ## 📚 Примеры API
 
