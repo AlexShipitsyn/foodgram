@@ -6,9 +6,11 @@ from django.shortcuts import render
 from django.urls import path, reverse
 
 from foodgram.constants import INGREDIENT_UNIT_MIN
-from recipes.models import (FavoriteRecipe, Import, Ingredient, Recipe,
-                            RecipeIngredient, ShoppingCart, Tag)
 from recipes.forms import ImportForm
+from recipes.models import (
+    FavoriteRecipe, Import, Ingredient, Recipe, RecipeIngredient,
+    ShoppingCart, Tag
+)
 
 
 class RecipeIngredientInline(admin.TabularInline):

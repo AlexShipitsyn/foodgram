@@ -14,13 +14,12 @@ from api.filters import IngredientFilter, RecipeFilter
 from api.paginations import FoodgramPagination
 from api.pdf_converter import ingredients_list, pdf_shopping_list
 from api.permissions import IsOwnerOrReadOnly
-from api.serializers import (AvatarSerializer, FavoriteSerializer,
-                             IngredientSerializer, RecipeCreateSerializer,
-                             RecipeSerializer, ShoppingCartSerializer,
-                             ShortLinkSerializer, SubscribeSerializer,
-                             TagSerializer)
-from recipes.models import (FavoriteRecipe, Ingredient, Recipe, ShoppingCart,
-                            Tag)
+from api.serializers import (
+    AvatarSerializer, FavoriteSerializer, IngredientSerializer,
+    RecipeCreateSerializer, RecipeSerializer, ShoppingCartSerializer,
+    ShortLinkSerializer, SubscribeSerializer, TagSerializer
+)
+from recipes.models import FavoriteRecipe, Ingredient, Recipe, ShoppingCart, Tag
 from users.models import Subscriber
 
 User = get_user_model()

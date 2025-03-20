@@ -5,10 +5,15 @@ from rest_framework import serializers
 from rest_framework.reverse import reverse
 from rest_framework.validators import UniqueTogetherValidator
 
-from foodgram.constants import (AMOUNT_MAX, AMOUNT_MIN,
-                                COOKING_TIME_MIN, COOKING_TIME_MAX)
-from recipes.models import (FavoriteRecipe, Ingredient, Recipe,
-                            RecipeIngredient, ShoppingCart, Tag)
+from foodgram.constants import (
+    AMOUNT_MAX, AMOUNT_MIN,
+    COOKING_TIME_MAX, COOKING_TIME_MIN
+)
+from recipes.models import (
+    FavoriteRecipe, Ingredient,
+    Recipe, RecipeIngredient,
+    ShoppingCart, Tag
+)
 from short_link.models import LinkMapped
 from users.models import Subscriber
 
