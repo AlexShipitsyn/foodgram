@@ -8,7 +8,7 @@ User = get_user_model()
 
 
 class IngredientFilter(FilterSet):
-    """Фильтр для поиска по Ингредиентам"""
+    """Фильтр для поиска по ингредиентам."""
 
     name = CharFilter(lookup_expr='istartswith')
 
@@ -18,7 +18,7 @@ class IngredientFilter(FilterSet):
 
 
 class RecipeFilter(FilterSet):
-    """Фильтр для поиска по Рецептам."""
+    """Фильтр для поиска по рецептам."""
 
     tags = AllValuesMultipleFilter(
         field_name='tags__slug',

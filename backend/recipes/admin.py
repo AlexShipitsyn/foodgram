@@ -4,10 +4,11 @@ from django.contrib import admin, messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import path, reverse
-from recipes.constants import INGREDIENT_MIN_AMOUNT
-from recipes.forms import ImportForm
+
+from foodgram.constants import INGREDIENT_UNIT_MIN
 from recipes.models import (FavoriteRecipe, Import, Ingredient, Recipe,
                             RecipeIngredient, ShoppingCart, Tag)
+from recipes.forms import ImportForm
 
 
 class RecipeIngredientInline(admin.TabularInline):
@@ -15,7 +16,7 @@ class RecipeIngredientInline(admin.TabularInline):
 
     model = RecipeIngredient
     extra = 1
-    min_num = INGREDIENT_MIN_AMOUNT
+    min_num = INGREDIENT_UNIT_MIN
 
 
 @admin.register(Recipe)
@@ -57,7 +58,7 @@ class RecipeAdmin(admin.ModelAdmin):
 
     def favorite_recipe(self, obj):
         """Избранное рецепты."""
-        return FavoriteRecipe.objects.filter(recipe=obj).count()
+        return obj.favorites.count()
 
 
 @admin.register(Tag)

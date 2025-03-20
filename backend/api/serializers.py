@@ -1,12 +1,14 @@
-from api.constants import AMOUNT_MAX, AMOUNT_MIN, COOKING_TIME_MIN
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from drf_extra_fields.fields import Base64ImageField
-from recipes.models import (FavoriteRecipe, Ingredient, Recipe,
-                            RecipeIngredient, ShoppingCart, Tag)
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 from rest_framework.validators import UniqueTogetherValidator
+
+from foodgram.constants import (AMOUNT_MAX, AMOUNT_MIN,
+                           COOKING_TIME_MIN, COOKING_TIME_MAX)
+from recipes.models import (FavoriteRecipe, Ingredient, Recipe,
+                            RecipeIngredient, ShoppingCart, Tag)
 from short_link.models import LinkMapped
 from users.models import Subscriber
 
@@ -169,6 +171,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
     cooking_time = serializers.IntegerField(
         min_value=COOKING_TIME_MIN,
+        max_value=COOKING_TIME_MAX
     )
 
     class Meta:

@@ -1,5 +1,6 @@
 from django.db import models
-from short_link.constants import MAX_HASH, URL
+
+from foodgram.constants import MAX_HASH_LENGTH, URL_MAX_LENGTH
 from short_link.service import generate_hash
 
 
@@ -8,15 +9,16 @@ class LinkMapped(models.Model):
 
     url_hash = models.CharField(
         'Короткая ссылка',
-        max_length=MAX_HASH,
+        max_length=MAX_HASH_LENGTH,
         default=generate_hash,
         unique=True
     )
     original_url = models.CharField(
         'Оригинальная ссылка',
-        max_length=URL)
+        max_length=URL_MAX_LENGTH)
 
     class Meta:
+        ordering = ('-original_url', )
         verbose_name = 'Ссылка'
         verbose_name_plural = 'Ссылки'
 

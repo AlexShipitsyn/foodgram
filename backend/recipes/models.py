@@ -1,8 +1,10 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from recipes.constants import (AMOUNT_MAX, AMOUNT_MIN, INGREDIENT_CHAR_MAX,
-                               INGREDIENT_UNIT_MAX, MIN_TIME, RECIPE_CHAR_MAX,
-                               TAG_CHAR_MAX)
+
+from foodgram.constants import (AMOUNT_MAX, AMOUNT_MIN, INGREDIENT_CHAR_MAX,
+                               INGREDIENT_UNIT_MAX,
+                               COOKING_TIME_MIN, COOKING_TIME_MAX,
+                               RECIPE_CHAR_MAX, TAG_CHAR_MAX)
 from users.models import User
 
 
@@ -104,7 +106,8 @@ class Recipe(AuthorModel):
     cooking_time = models.PositiveSmallIntegerField(
         'Время приготовления',
         validators=[
-            MinValueValidator(MIN_TIME,),
+            MinValueValidator(COOKING_TIME_MIN),
+            MaxValueValidator(COOKING_TIME_MAX),
         ],
     )
 
@@ -133,13 +136,13 @@ class RecipeIngredient(models.Model):
     amount = models.PositiveSmallIntegerField(
         'Количество',
         validators=[
-            MinValueValidator(AMOUNT_MIN,),
-            MaxValueValidator(AMOUNT_MAX,),
+            MinValueValidator(AMOUNT_MIN),
+            MaxValueValidator(AMOUNT_MAX),
         ],
     )
 
     class Meta:
-        ordering = ('-id', )
+        ordering = ('-recipe', )
         default_related_name = 'recipe_ingredients'
         constraints = [
             models.UniqueConstraint(
@@ -170,12 +173,6 @@ class AuthorRecipeModel(AuthorModel):
 class FavoriteRecipe(AuthorRecipeModel):
     """Избранные рецепты."""
 
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='favorite_recipes'
-    )
-
     class Meta:
         default_related_name = 'favorites'
         verbose_name = 'Избранное'
@@ -194,14 +191,7 @@ class FavoriteRecipe(AuthorRecipeModel):
 class ShoppingCart(AuthorRecipeModel):
     """Корзина рецептов."""
 
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='shopping_cart_recipes'
-    )
-
     class Meta:
-        ordering = ('-id', )
         default_related_name = 'shopping_carts'
         verbose_name = 'Корзина'
         verbose_name_plural = verbose_name
@@ -229,7 +219,7 @@ class Import(models.Model):
     )
 
     class Meta:
-        ordering = ('-id', )
+        ordering = ('-date_added', )
         verbose_name = 'Учет импорта CSV'
         verbose_name_plural = verbose_name
 

@@ -1,10 +1,14 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from users.constants import FIRST_NAME_MAX_LENGTH, LAST_NAME_MAX_LENGTH
+
+from foodgram.constants import FIRST_NAME_MAX_LENGTH, LAST_NAME_MAX_LENGTH
 
 
 class User(AbstractUser):
     """Модель пользователя."""
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'username']
 
     email = models.EmailField(
         unique=True,
@@ -24,8 +28,13 @@ class User(AbstractUser):
         verbose_name='Аватар'
     )
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'username']
+    class Meta():
+        ordering = ('username',)
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
+    def __str__(self):
+        return f'Пользователь: {self.username}'
 
 
 class Subscriber(models.Model):
@@ -44,6 +53,7 @@ class Subscriber(models.Model):
     )
 
     class Meta:
+        ordering = ('-author', )
         default_related_name = 'subscribers'
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
