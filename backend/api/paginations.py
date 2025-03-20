@@ -2,6 +2,7 @@ from rest_framework.pagination import PageNumberPagination
 
 from foodgram.constants import PAGE_SIZE, PAGE_SIZE_QUERY_PARAM
 
+
 class FoodgramPagination(PageNumberPagination):
     """Класс пагинации."""
 
