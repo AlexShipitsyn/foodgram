@@ -14,4 +14,4 @@ uharfbuzz==0.39.1
 drf_extra_fields==3.7.0
 reportlab==4.3.1
 flake8==7.1.1
-isort==6.0.1
+isort==5.13.2
