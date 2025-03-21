@@ -1,4 +1,5 @@
 from django.db import models
+
 from foodgram.constants import MAX_HASH_LENGTH, URL_MAX_LENGTH
 from short_link.service import generate_hash
 

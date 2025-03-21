@@ -1,5 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+
 from foodgram.constants import (AMOUNT_MAX, AMOUNT_MIN, COOKING_TIME_MAX,
                                 COOKING_TIME_MIN, INGREDIENT_CHAR_MAX,
                                 INGREDIENT_UNIT_MAX, RECIPE_CHAR_MAX,

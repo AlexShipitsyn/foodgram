@@ -1,3 +1,15 @@
+from django.contrib.auth import get_user_model
+from django.db.models import Exists, OuterRef
+from django.http import FileResponse
+from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
+from djoser import views as djoser_views
+from rest_framework import permissions, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+
 from api.filters import IngredientFilter, RecipeFilter
 from api.paginations import FoodgramPagination
 from api.pdf_converter import ingredients_list, pdf_shopping_list
@@ -7,19 +19,8 @@ from api.serializers import (AvatarSerializer, FavoriteSerializer,
                              RecipeSerializer, ShoppingCartSerializer,
                              ShortLinkSerializer, SubscribeSerializer,
                              TagSerializer)
-from django.contrib.auth import get_user_model
-from django.db.models import Exists, OuterRef
-from django.http import FileResponse
-from django.shortcuts import get_object_or_404
-from django_filters.rest_framework import DjangoFilterBackend
-from djoser import views as djoser_views
 from recipes.models import (FavoriteRecipe, Ingredient, Recipe, ShoppingCart,
                             Tag)
-from rest_framework import permissions, status, viewsets
-from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
 from users.models import Subscriber
 
 User = get_user_model()
@@ -126,7 +127,7 @@ class UserViewSet(djoser_views.UserViewSet):
     def subscribe(self, request, id):
         """Подписка на автора."""
         serializer = SubscribeSerializer(
-            data={'author': self.get_object()},
+            data={'author': self.get_object().email},
             context={'request': request},
         )
         serializer.is_valid(raise_exception=True)
