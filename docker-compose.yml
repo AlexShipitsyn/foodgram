@@ -41,7 +41,6 @@ services:
       - "8000:80"
     volumes:
       - ./docs/:/usr/share/nginx/html/api/docs/
-      - ../frontend/build:/usr/share/nginx/html/
       - staticfiles:/static/
       - mediafiles:/media/
     depends_on:
